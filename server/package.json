@@ -1,0 +1,48 @@
+{
+  "name": "express-typescript-mongo-seed",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "gulp server-dev",
+    "build-prod": "cross-env NODE_ENV=prod gulp build-prod",
+    "build-dev": "cross-env NODE_ENV=dev gulp build-dev",
+    "test": "gulp build-prod"
+  },
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "dotenv": "^4.0.0",
+    "moment": "^2.18.1",
+    "morgan": "^1.8.2",
+    "rethinkdbdash": "^2.3.31",
+    "serve-favicon": "^2.4.3",
+    "uws": "^8.14.1",
+    "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.1",
+    "@types/del": "^3.0.0",
+    "@types/dotenv": "^4.0.1",
+    "@types/gulp": "^4.0.4",
+    "@types/gulp-nodemon": "^0.0.30",
+    "@types/gulp-rename": "^0.0.32",
+    "@types/moment": "^2.13.0",
+    "@types/morgan": "^1.7.32",
+    "@types/node": "^8.0.24",
+    "@types/run-sequence": "^0.0.29",
+    "@types/serve-favicon": "^2.2.29",
+    "@types/uws": "^0.13.0",
+    "@types/winston": "^2.3.5",
+    "cross-env": "^5.0.5",
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-cached": "^1.1.1",
+    "gulp-nodemon": "^2.2.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-tslint": "^8.1.2",
+    "gulp-typescript": "^3.2.1",
+    "run-sequence": "^2.1.0",
+    "ts-node": "^3.3.0",
+    "tslint": "^5.6.0",
+    "typescript": "^2.4.2"
+  }
+}

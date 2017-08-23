@@ -5,17 +5,15 @@ import { WebSocket } from './types/websocket';
 import { eventEmitter } from './modules/events.module';
 
 export default class AppServer {
-    private wss: Server;
+    wss: Server;
 
-    constructor() {
-        this.listen().catch((err: any) => LoggerModule.error(err));
-    }
+    constructor() {}
 
     /**
      * 1. RethinkDb connection
      * 2. websocket Server listen
      */
-    private async listen() {
+    async listen() {
         const db = new InitDB();
         await db.connect();
 
@@ -33,7 +31,7 @@ export default class AppServer {
     private connection() {
         const wss = this.wss;
         wss.on('connection', (ws: WebSocket) => {
-            ws.ip = ws.upgradeReq.headers['x-forwarded-for'].toString() || ws._socket.remoteAddress;
+            ws.ip = (ws.upgradeReq.headers['x-forwarded-for'] || ws._socket.remoteAddress).toString();
 
             LoggerModule.log(`[syncro] new socket connection(${ws.ip})`);
 

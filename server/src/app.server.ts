@@ -48,12 +48,12 @@ export default class AppServer {
             }
             const params = JSON.parse(event.data);
             const route = params.route;
-            const type = params.type;
+            const action = params.action;
             const payload = params.payload;
 
-            eventEmitter.emit(route, {type, payload, ws});
+            eventEmitter.emit(route, {action, payload, ws});
 
-            LoggerModule.log(`[syncro] socket call event(${type})`);
+            LoggerModule.log(`[syncro] socket call event(${action})`);
         };
     }
 

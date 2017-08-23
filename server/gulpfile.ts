@@ -9,7 +9,8 @@ import tslint from 'gulp-tslint';
 
 const path: any = {
     src: ['src/**/*.ts', 'src/**/**/*.ts', 'src/**/**/**/*.ts', 'src/**/**/**/**.ts'],
-    buildTs: ['src/app.ts', 'src/**/**/*.ts', 'src/**/**/**/*.ts', 'src/**/**/**/**.ts', '!src/server-dev.ts', '!src/server-prod.ts', '!src/server-test.ts'],
+    buildTs: ['src/app.ts', 'src/**/**/*.ts', 'src/**/**/**/*.ts', 'src/**/**/**/**.ts',
+        '!src/server-dev.ts', '!src/server-prod.ts', '!src/server-test.ts'],
     testTs: 'src/server-test.ts',
     devTs: 'src/server-dev.ts',
     prodTs: 'src/server-prod.ts',

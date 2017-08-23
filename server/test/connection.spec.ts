@@ -19,13 +19,13 @@ describe('Connection Test', () => {
         const ws = new WebSocket(url, 'echo-protocol');
 
         ws.onopen = event => {
-            ws.close()
+            ws.close();
         };
         ws.onerror = err => {
-            done(err)
+            done(err);
         };
         ws.onclose = () => {
-            done()
+            done();
         };
     });
 });

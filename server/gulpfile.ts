@@ -9,7 +9,8 @@ import tslint from 'gulp-tslint';
 
 const path: any = {
     src: ['src/**/*.ts', 'src/**/**/*.ts', 'src/**/**/**/*.ts', 'src/**/**/**/**.ts'],
-    buildTs: ['src/app.ts', 'src/**/**/*.ts', 'src/**/**/**/*.ts', 'src/**/**/**/**.ts', '!src/server-dev.ts', '!src/server-prod.ts'],
+    buildTs: ['src/app.ts', 'src/**/**/*.ts', 'src/**/**/**/*.ts', 'src/**/**/**/**.ts', '!src/server-dev.ts', '!src/server-prod.ts', '!src/server-test.ts'],
+    testTs: 'src/server-test.ts',
     devTs: 'src/server-dev.ts',
     prodTs: 'src/server-prod.ts',
     watchJs: ['dist/**/*.js', 'src/**/**/*.js', 'dist/**/**/**/*.js', 'dist/**/**/**/**.js']
@@ -37,6 +38,16 @@ gulp.task('tsc', () => {
         .pipe(tsProject());
 
     return ts.js.pipe(gulp.dest('dist'));
+});
+
+/**
+ * test ts빌드
+ */
+gulp.task('tsc-server-test', () => {
+    const ts = gulp.src(path.testTs)
+        .pipe(tsProject());
+
+    return ts.js.pipe(rename({basename: 'server', extname: '.js'})).pipe(gulp.dest('dist'));
 });
 
 /**
@@ -74,6 +85,17 @@ gulp.task('ts', (done: any) => runSequence(
 gulp.task('clean', () => {
     del('dist');
 });
+
+/**
+ * build-test
+ */
+gulp.task('build-test', (done: any) => runSequence(
+    'clean',
+    'ts-lint',
+    'tsc',
+    'tsc-server-test',
+    done
+));
 
 /**
  * build-dev

@@ -6,7 +6,7 @@
     "start": "gulp server-dev",
     "build-prod": "gulp build-prod",
     "build-dev": "gulp build-dev",
-    "test": "gulp build-prod"
+    "test": "gulp build-dev && node test/runner.js"
   },
   "dependencies": {
     "crypto": "^1.0.1",

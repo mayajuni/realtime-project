@@ -31,7 +31,7 @@ export default class AppServer {
     private connection() {
         const wss = this.wss;
         wss.on('connection', (ws: WebSocket) => {
-            ws.ip = ws.upgradeReq.headers['x-forwarded-for'].toString() || ws._socket.remoteAddress;
+            ws.ip = (ws.upgradeReq.headers['x-forwarded-for'] || ws._socket.remoteAddress).toString();
 
             LoggerModule.log(`[syncro] new socket connection(${ws.ip})`);
 

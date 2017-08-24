@@ -7,7 +7,7 @@ import * as fs from 'fs';
 
 export namespace LoggerModule {
     export const error = (msg: any) => {
-        if (process.env.NODE_ENV !== 'test') {
+        if (process.env.NODE_ENV === 'test') {
             return;
         }
         const errorLog = new (winston.Logger)({

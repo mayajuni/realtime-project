@@ -12,13 +12,14 @@ export function Validation(jsonSchema: object) {
 
         descriptor.value = function () {
             const payload = arguments[0].payload;
-            originalMethod.apply(this, [...arguments]);
+            console.log(2);
             // validation 체크를 한다 통과하지 못하면 ajv.errors 보면 된다.
             if (!ajv.validate(jsonSchema, payload)) {
                 throw new ValidationError(ajv.errorsText());
             }
-            // 에러메세지 보기 위해서 넣었다.
-            if (ajv.errors) console.log(ajv.errors);
+
+            const result = originalMethod.apply(this, [...arguments]);
+            console.log(result);
         };
 
         return descriptor;

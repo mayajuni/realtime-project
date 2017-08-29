@@ -18,4 +18,8 @@ export default class User {
         // route, action, payload로 구성 되어 있다.
         send('user', 'setUserInfo', ws.user);
     }
+
+    register() {
+
+    }
 }

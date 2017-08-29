@@ -4,6 +4,7 @@ import InitDB from './db';
 import { WebSocket } from './types/websocket';
 import { checkRoute, eventEmitter } from './modules/events.module';
 import { NullPointError } from './modules/error.module';
+import { routes } from './router/index';
 
 export default class AppServer {
     wss: Server;
@@ -26,6 +27,8 @@ export default class AppServer {
 
         this.wss.on('error', (error: any) => LoggerModule.error('[syncro] wss error: ' + error));
         LoggerModule.log(`WebSocket listening on port ${port}`);
+
+        this.addRouter();
 
         this.connection();
 
@@ -83,7 +86,13 @@ export default class AppServer {
     private onError() {
         eventEmitter.on('error', (error, ws) => {
             LoggerModule.error(error);
-            ws.send(JSON.stringify({route: 'error', payload: {error}}));
+            ws.send(JSON.stringify({route: 'error', payload: {error: {name: error.name, message: error.message}}}));
         });
+    }
+
+    private addRouter() {
+        for (const route of routes) {
+            new route();
+        }
     }
 }

@@ -4,6 +4,7 @@
 export class NullPointError extends Error {
     constructor(message: string) {
         super(message);
+        this.message = message;
         this.name = 'NullPointError';
     }
 }
@@ -25,5 +26,15 @@ export class ValidationError extends Error {
     constructor(message: string) {
         super(message);
         this.name = 'ValidationError';
+    }
+}
+
+/**
+ * 권한 에러
+ */
+export class AuthorizeError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = 'AuthorizeError';
     }
 }

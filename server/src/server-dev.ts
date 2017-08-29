@@ -3,9 +3,10 @@
  */
 import * as dotenv from 'dotenv';
 import AppServer from './app.server';
+import { join } from 'path';
 
 dotenv.config({
-    path: '../.env'
+    path: join(__dirname, '..', '.env')
 });
 
 /* 서버 구동 */

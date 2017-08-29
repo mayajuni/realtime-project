@@ -5,7 +5,7 @@ export const eventEmitter = new EventEmitter();
 
 export const checkRoute = (route: string) => {
     const eventNames = eventEmitter.eventNames();
-    if (eventNames.some((eventName) => eventName !== route)) {
+    if (!eventNames.includes(route)) {
         throw new NotFoundError('not found route');
     }
 };

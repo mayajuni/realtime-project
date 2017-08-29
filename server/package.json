@@ -9,6 +9,7 @@
     "test": "gulp build-test && node test/runner.js"
   },
   "dependencies": {
+    "ajv": "^5.2.2",
     "crypto": "^1.0.1",
     "dotenv": "^4.0.0",
     "moment": "^2.18.1",
@@ -19,6 +20,7 @@
     "winston": "^2.3.1"
   },
   "devDependencies": {
+    "@types/ajv": "^1.0.0",
     "@types/chai": "^4.0.4",
     "@types/cors": "^2.8.1",
     "@types/del": "^3.0.0",

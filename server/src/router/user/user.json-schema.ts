@@ -1,4 +1,4 @@
-export const authorizeToken = {
+export const authorizeTokenSchema = {
     description: 'jwt 권한 schema',
     type: 'object',
     properties: {
@@ -10,8 +10,8 @@ export const authorizeToken = {
     required: ['token'],
 };
 
-export const register = {
-    description: '회원가입',
+export const userSchema = {
+    description: 'userSchema',
     type: 'object',
     properties: {
         email: {
@@ -19,22 +19,14 @@ export const register = {
             type: 'string',
             format: 'email',
         },
-        name: {
-            description: '이름 혹은 닉네임',
+        type: {
+            description: '회원가입 했을시 타입(password, google, kakao, facebook)',
             type: 'string',
-        }
-    },
-    required: ['email', 'name'],
-    anyOf: [
-        {
-            properties: {
-                password: {
-                    description: '비밀번호',
-                    type: 'string',
-                },
-            },
-            required: ['password']
+            enum: ['google', 'kakao', 'facebook'],
         },
+    },
+    required: ['email', 'type'],
+    anyOf: [
         {
             properties: {
                 kakaoId: {

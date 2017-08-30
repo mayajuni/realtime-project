@@ -38,6 +38,7 @@
     "@types/serve-favicon": "^2.2.29",
     "@types/uws": "^0.13.0",
     "@types/winston": "^2.3.5",
+    "ajv-merge-patch": "^3.0.0",
     "chai": "^4.1.1",
     "cross-spawn": "^5.1.0",
     "del": "^3.0.0",

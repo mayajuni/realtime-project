@@ -1,7 +1,7 @@
 import * as AJV from 'ajv';
 import { SocketError } from '../modules/error.module';
-
 const ajv = AJV(({removeAdditional: true}));
+require('ajv-merge-patch/keywords/merge')(ajv);
 
 export function Validation(jsonSchema: object) {
     return (target: any, key: string, descriptor: PropertyDescriptor) => {

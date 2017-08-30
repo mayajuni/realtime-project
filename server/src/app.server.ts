@@ -3,12 +3,13 @@ import { LoggerModule } from './modules/logger.module';
 import InitDB from './db';
 import { WebSocket } from './models/definition/websocket';
 import { checkRoute, eventEmitter } from './modules/events.module';
-import { NullPointError } from './modules/error.module';
+import { SocketError } from './modules/error.module';
 import { routes } from './router/index';
 import { send } from './models/types/socket.types';
 
 export default class AppServer {
     wss: Server;
+    r: any;
 
     constructor() {
     }
@@ -20,6 +21,7 @@ export default class AppServer {
     async listen() {
         const db = new InitDB();
         await db.connect();
+        this.r = db.r;
 
         const port = Number(process.env.PORT || 3000);
         this.wss = new Server({
@@ -53,7 +55,7 @@ export default class AppServer {
         ws.onmessage = event => {
             try {
                 if (event.data === null || event.data.byteLength === 0) {
-                    throw new NullPointError(`socket onmessage don't have data.`);
+                    throw new SocketError(`socket onmessage don't have data.`, 'nullError', 422);
                 }
 
                 const params = JSON.parse(event.data);
@@ -69,7 +71,9 @@ export default class AppServer {
                     ws.send(JSON.stringify({route, action, payload}));
                 };
 
-                eventEmitter.emit(route, {action, payload, ws, send});
+                const r = this.r;
+
+                eventEmitter.emit(route, {action, payload, ws, send, r});
 
                 LoggerModule.log(`socket call event(${action})`);
             } catch (error) {
@@ -87,7 +91,7 @@ export default class AppServer {
     private onError() {
         eventEmitter.on('error', (error, ws) => {
             LoggerModule.error(error);
-            ws.send(JSON.stringify({route: 'error', payload: {error: {name: error.name, message: error.message}}}));
+            ws.send(JSON.stringify({route: 'error', payload: {error: {name: error.name, message: error.message, code: error.code}}}));
         });
     }
 

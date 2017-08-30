@@ -1,4 +1,4 @@
-import { AuthorizeError } from '../modules/error.module';
+import { SocketError } from '../modules/error.module';
 
 export function Login() {
     return (target: any, key: string, descriptor: PropertyDescriptor) => {
@@ -10,7 +10,7 @@ export function Login() {
         descriptor.value = function () {
             const params = arguments[0];
             if(!params.ws.user) {
-                throw new AuthorizeError(`[${params.route}-${params.action}] protected from guests`);
+                throw new SocketError(`[${params.route}-${params.action}] protected from guests`, 'authorize', 401);
             }
             const result = originalMethod.apply(this, [...arguments]);
             return result;

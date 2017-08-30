@@ -1,40 +1,14 @@
 /**
- * 무언가 값이 없을시 쓰는 에러다.
+ * Error의 메세지만으로 판단하기 힘들꺼 같아서 code와 name을 함께 쓰게 했다.
  */
-export class NullPointError extends Error {
-    constructor(message: string) {
+export class SocketError extends Error {
+    message: string;
+    name: string;
+    code: string | number;
+    constructor(message: string, name?: string, code?: string | number) {
         super(message);
         this.message = message;
-        this.name = 'NullPointError';
-    }
-}
-
-/**
- * 라우터를 찾을 수 없을때 쓰는 에러다.
- */
-export class NotFoundError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = 'NotFoundError';
-    }
-}
-
-/**
- * validation 에러
- */
-export class ValidationError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = 'ValidationError';
-    }
-}
-
-/**
- * 권한 에러
- */
-export class AuthorizeError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = 'AuthorizeError';
+        this.name =  name;
+        this.code = code;
     }
 }

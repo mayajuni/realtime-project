@@ -16,7 +16,7 @@ declare class WebSocket extends events.EventEmitter {
     upgradeReq: http.IncomingMessage;
     protocol: string;
     ip: string;
-    user: string;
+    user: string | object;
     _socket: net.Socket;
 
     CONNECTING: number;

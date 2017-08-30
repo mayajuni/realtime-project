@@ -1,10 +1,11 @@
 import { Server } from 'uws';
 import { LoggerModule } from './modules/logger.module';
 import InitDB from './db';
-import { WebSocket } from './types/websocket';
+import { WebSocket } from './models/definition/websocket';
 import { checkRoute, eventEmitter } from './modules/events.module';
 import { NullPointError } from './modules/error.module';
 import { routes } from './router/index';
+import { send } from './models/types/socket.types';
 
 export default class AppServer {
     wss: Server;
@@ -64,7 +65,7 @@ export default class AppServer {
                 checkRoute(route);
 
                 // ws.send 같은경우 data를 보낼 때 String, Blob, ArrayBuffer만 보낼 수 있기 때문에 JSON.stringify으로 묶어 준다.
-                const send = (route: string, action: string, payload: any): void => {
+                const send: send = (route: string, action: string, payload: any): void => {
                     ws.send(JSON.stringify({route, action, payload}));
                 };
 

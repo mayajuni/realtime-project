@@ -2,6 +2,7 @@ import { Router } from '../../decorators/router.decorator';
 import { Validation } from '../../decorators/validation.decorator';
 import { authorizeToken } from './user.json-schema';
 import { verify } from 'jsonwebtoken';
+import { socketParams } from '../../models/types/socket.types';
 
 @Router()
 export default class User {
@@ -9,7 +10,7 @@ export default class User {
     }
 
     @Validation(authorizeToken)
-    authorizeToken({payload, ws, send}: any) {
+    authorizeToken({ws, payload, send}: socketParams) {
         const token = payload.token;
 
         const userInfo = verify(token, process.env.JWT_KEY);
@@ -17,5 +18,9 @@ export default class User {
         ws.user = userInfo;
         // route, action, payload로 구성 되어 있다.
         send('user', 'setUserInfo', ws.user);
+    }
+
+    register() {
+
     }
 }

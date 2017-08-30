@@ -72,17 +72,16 @@ describe('User Test', () => {
         });
     });
 
-    describe('register Test', () => {
-        it('register validation check', done => {
+    describe('Login test', () => {
+        it('login validation check', done => {
             const payload = {
-                password: 'test',
                 kakaoId: '3242',
                 facebookId: '3242',
                 googleId: '3242',
             };
             let index = 0;
 
-            ws.send(JSON.stringify({route: 'User', action: 'register', payload}));
+            ws.send(JSON.stringify({route: 'User', action: 'login', payload}));
             ws.onmessage = (event: any) => {
                 const params = JSON.parse(event.data);
 
@@ -92,8 +91,8 @@ describe('User Test', () => {
                 if (index < 1) {
                     ws.send(JSON.stringify({
                         route: 'User',
-                        action: 'register',
-                        payload: {email: 'test@test.com', name: 'test'}
+                        action: 'login',
+                        payload: {email: 'test@test.com'}
                     }));
                     index++;
                 } else {
@@ -105,40 +104,87 @@ describe('User Test', () => {
         it('register', (done) => {
             const payload = {
                 email: 'test@test.com',
-                name: 'test',
-                password: 'test',
                 kakaoId: '3242',
                 facebookId: '3242',
                 googleId: '3242',
+                type: 'kakao',
             };
 
-            ws.send(JSON.stringify({route: 'User', action: 'register', payload}));
+            ws.send(JSON.stringify({route: 'User', action: 'login', payload}));
             ws.onmessage = (event: any) => {
                 const params = JSON.parse(event.data);
-
                 params.route.should.equal('user');
                 params.action.should.equal('setUserInfo');
                 params.payload.user.email.should.equal(payload.email);
-                params.payload.user.name.should.equal(payload.name);
                 params.payload.should.haveOwnProperty('token');
                 done();
             };
         });
 
-        it('register 중복 체크', (done) => {
-            const payload = {
-                email: 'test@test.com',
-                name: 'test',
-                password: 'test',
-            };
+        it('login check', (done) => {
+            const email = 'test@test.com';
+            ws.send(JSON.stringify({
+                route: 'User',
+                action: 'login',
+                payload: {email: email, kakaoId: '3242', type: 'kakao'}
+            }));
+            ws.send(JSON.stringify({
+                route: 'User',
+                action: 'login',
+                payload: {email: email, facebookId: '3242', type: 'facebook'}
+            }));
+            ws.send(JSON.stringify({
+                route: 'User',
+                action: 'login',
+                payload: {email: email, googleId: '3242', type: 'google'}
+            }));
 
-            ws.send(JSON.stringify({route: 'User', action: 'register', payload}));
+            let index = 0;
+            ws.onmessage = (event: any) => {
+                const params = JSON.parse(event.data);
+
+                params.route.should.equal('user');
+                params.action.should.equal('setUserInfo');
+                params.payload.user.email.should.equal(email);
+                params.payload.should.haveOwnProperty('token');
+                if (index < 2) {
+                    index++;
+                } else {
+                    done();
+                }
+            };
+        });
+
+        it('가입은 되어 있지만 sns 고유 id가 다를 경우', (done) => {
+            ws.send(JSON.stringify({
+                route: 'User',
+                action: 'login',
+                payload: {email: 'test@test.com', kakaoId: '324222', type: 'kakao'}
+            }));
+
             ws.onmessage = (event: any) => {
                 const params = JSON.parse(event.data);
 
                 params.route.should.equal('error');
-                params.payload.error.name.should.equal('register');
-                params.payload.error.code.should.equal(422);
+                params.payload.error.name.should.equal('login');
+                params.payload.error.code.should.equal(401);
+                done();
+            };
+        });
+
+        it('tpye과 sns id가 다를경우', (done) => {
+            ws.send(JSON.stringify({
+                route: 'User',
+                action: 'login',
+                payload: {email: 'test@test.com', kakaoId: '324222', type: 'facebook'}
+            }));
+
+            ws.onmessage = (event: any) => {
+                const params = JSON.parse(event.data);
+
+                params.route.should.equal('error');
+                params.payload.error.name.should.equal('login');
+                params.payload.error.code.should.equal(401);
                 done();
             };
         });

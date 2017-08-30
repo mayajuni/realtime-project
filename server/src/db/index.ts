@@ -1,5 +1,3 @@
-import { LoggerModule } from '../modules/logger.module';
-
 const rethinkDB = require('rethinkdbdash');
 
 export default class InitDB {

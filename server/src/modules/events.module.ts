@@ -1,12 +1,12 @@
 import { EventEmitter } from 'events';
-import { NotFoundError } from './error.module';
+import { SocketError } from './error.module';
 
 export const eventEmitter = new EventEmitter();
 
 export const checkRoute = (route: string) => {
     const eventNames = eventEmitter.eventNames();
     if (!eventNames.includes(route)) {
-        throw new NotFoundError('not found route');
+        throw new SocketError('not found route', 'notFound', 404);
     }
 };
 

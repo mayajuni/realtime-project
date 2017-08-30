@@ -5,13 +5,18 @@ export function Router(name?: string) {
     return (target: any) => {
         const targetInstance = new target();
         const route = name || target.name;
-        eventEmitter.on(route, ({action, payload, ws, send}: socketParams) => {
+        eventEmitter.on(route, ({action, payload, ws, send, r}: socketParams) => {
             // 에러 처리를 위해서 promise로 감싼다.
-            new Promise(() => {
-                targetInstance[action]({route, action, payload, ws, send});
-            }).catch(error => {
+            try {
+                const result = targetInstance[action]({route, action, payload, ws, send, r});
+                if (result instanceof Promise) {
+                    result.catch((error) => {
+                        eventEmitter.emit('error', error, ws);
+                    });
+                }
+            } catch (error) {
                 eventEmitter.emit('error', error, ws);
-            });
+            }
         });
     };
 }

@@ -21,10 +21,11 @@ describe('Common Error Test', () => {
     it('event is null 테스트', done => {
         ws.onmessage = (event: any) => {
             const params = JSON.parse(event.data);
-            const errorName = params.payload.error.name;
+            const error = params.payload.error;
             const route = params.route;
             route.should.equal('error');
-            errorName.should.equal('NullPointError');
+            error.name.should.equal('nullError');
+            error.code.should.equal(422);
             done();
         };
         ws.send();
@@ -33,10 +34,11 @@ describe('Common Error Test', () => {
     it('not found router 테스트', done => {
         ws.onmessage = (event: any) => {
             const params = JSON.parse(event.data);
-            const errorName = params.payload.error.name;
+            const error = params.payload.error;
             const route = params.route;
             route.should.equal('error');
-            errorName.should.equal('NotFoundError');
+            error.name.should.equal('notFound');
+            error.code.should.equal(404);
             done();
         };
         ws.send(JSON.stringify({route: 'test'}));

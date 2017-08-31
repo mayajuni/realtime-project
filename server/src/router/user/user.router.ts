@@ -4,7 +4,6 @@ import { authorizeTokenSchema, userSchema } from './user.json-schema';
 import { sign, verify } from 'jsonwebtoken';
 import { socketParams } from '../../models/types/socket.types';
 import { SocketError } from '../../modules/error.module';
-import { encrypt } from '../../modules/crypto.module';
 
 @Router()
 export default class User {

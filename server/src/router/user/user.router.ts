@@ -6,7 +6,7 @@ import { socketParams } from '../../models/types/socket.types';
 import { SocketError } from '../../modules/error.module';
 
 @Router()
-export default class User {
+export class User {
     constructor() {
     }
 

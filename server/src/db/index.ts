@@ -8,7 +8,8 @@ export default class InitDB {
         this.initDB = {
             users: {
                 key: 'email'
-            }
+            },
+            lists: {}
         };
     }
 

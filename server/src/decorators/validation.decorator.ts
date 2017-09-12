@@ -1,17 +1,17 @@
 import * as AJV from 'ajv';
 import { SocketError } from '../modules/error.module';
-const ajv = AJV(({removeAdditional: true}));
-require('ajv-merge-patch/keywords/merge')(ajv);
 
-export function Validation(jsonSchema: object) {
+const ajv = AJV(({removeAdditional: true}));
+
+export const Validation = (jsonSchema: object) => {
     return (target: any, key: string, descriptor: PropertyDescriptor) => {
         if (descriptor === undefined) {
             descriptor = Object.getOwnPropertyDescriptor(target, key);
         }
         const originalMethod = descriptor.value;
-
         descriptor.value = function () {
             const payload = arguments[0].payload;
+
             // validation 체크를 한다 통과하지 못하면 ajv.errors 보면 된다.
             if (!ajv.validate(jsonSchema, payload)) {
                 throw new SocketError(ajv.errorsText(), 'validation', 422);
@@ -23,4 +23,4 @@ export function Validation(jsonSchema: object) {
 
         return descriptor;
     };
-}
+};

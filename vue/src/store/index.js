@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import exPluin from './plugin/ex-plugin'
+import socketPlugin from './plugin/socket.plugin'
 
 Vue.use(Vuex)
 
@@ -8,7 +8,7 @@ const store = new Vuex.Store({
   modules: {},
   state: {},
   mutations: {},
-  plugins: [exPluin]
+  plugins: [socketPlugin]
 })
 
 export default store

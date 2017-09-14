@@ -10,4 +10,4 @@ dotenv.config({
 });
 
 /* 서버 구동 */
-new AppServer();
+new AppServer().listen();

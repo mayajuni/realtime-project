@@ -13,4 +13,4 @@ dotenv.config({
 process.env.NODE_ENV = 'production';
 
 /* 서버 구동 */
-new AppServer();
+new AppServer().listen();

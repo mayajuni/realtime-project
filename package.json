@@ -4,13 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:server": "cd server && npm start",
-    "dev:vue": "cd vue && npm run dev",
-    "dev": "run-p dev:*"
+    "dev": "node start-dev.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "npm-run-all": "^4.1.1"
   }
 }

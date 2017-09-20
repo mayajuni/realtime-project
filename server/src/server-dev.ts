@@ -9,5 +9,15 @@ dotenv.config({
     path: join(__dirname, '..', '.env')
 });
 
-/* 서버 구동 */
-new AppServer().listen();
+let _resolve: any;
+const readyPromise = new Promise(resolve => {
+    _resolve = resolve;
+});
+
+const appServer = new AppServer();
+appServer.listen().then(() => {
+    _resolve();
+});
+
+export const ready = readyPromise;
+export const close = () => appServer.wss.close();

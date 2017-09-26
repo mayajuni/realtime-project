@@ -1,7 +1,18 @@
 <template>
   <div>
-    <div class="list-title" v-if="!enableInput" @click="toggleInput">{{ list.title }}</div>
-    <div class="list-title" v-if="enableInput" @click="toggleInput">213</div>
+    <div class="header row no-gutters">
+      <div class="list-title col-11">
+        <div class="text" v-if="!enableInput" @click="toggleInput">
+          {{ listTitle }}
+        </div>
+        <div class="input" v-if="enableInput">
+          <input class="form-control" placeholder="list-title" ref="title" v-model="listTitle" @blur="toggleInput">
+        </div>
+      </div>
+      <div class="remove col-1">
+        x
+      </div>
+    </div>
     <div class="content">
       <draggable :list="list.cards" :options="{group:'cards'}" class="cards" :list-id="list.id">
         <div v-for="card, index in list.cards" :key="index" class="task">
@@ -23,12 +34,22 @@
     },
     data () {
       return {
+        listTitle: '',
         enableInput: false
       }
+    },
+    created () {
+      this.listTitle = this.list.title
     },
     methods: {
       toggleInput () {
         this.enableInput = !this.enableInput
+        if (this.enableInput) {
+          this.listTitle = this.list.title
+          this.$nextTick(() => this.$refs.title.focus())
+        } else {
+          this.list.title = this.listTitle
+        }
       }
     },
     components: {
@@ -39,12 +60,36 @@
 </script>
 
 <style scoped lang='scss'>
-  .list-title {
-    padding: 5px 10px;
+  .header {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     color: #dddddd;
     background-color: #252b74;
+
+    .list-title {
+      cursor: pointer;
+
+      .text {
+        padding: 6px 10px;
+      }
+
+      .input {
+        padding: 5px 5px;
+
+        input {
+          padding: 3px 6px;
+          line-height: 1;
+          border-radius: .2rem;
+        }
+      }
+    }
+
+    .remove {
+      cursor: pointer;
+      text-align: center;
+      padding: 6px 5px 6px 0;
+      font-weight: 600;
+    }
   }
 
   .content {

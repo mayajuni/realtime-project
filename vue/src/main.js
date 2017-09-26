@@ -2,7 +2,6 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-import router from './router'
 import store from './store'
 import eventEmiter from './modules/event-emiter/event-emiter.module'
 import socketClient from './modules/socket/socket-client.module'
@@ -17,7 +16,6 @@ socketClient.connect()
 eventEmiter.once('@connected', () =>
   new Vue({
     el: '#app',
-    router,
     store,
     render: h => h(App)
   })

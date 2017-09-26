@@ -1,12 +1,8 @@
 <template>
   <div class="kanban">
     <div class="kanban-wrapper">
-      <header>
-        <div class="github">
-          <iframe src="https://ghbtns.com/github-btn.html?user=mayajuni&repo=realtime-project&type=star" frameborder="0"
-                  scrolling="0" width="170px" height="20px"></iframe>
-        </div>
-        <div class="icon">
+      <div class="icons">
+        <div>
           <a href="https://nodejs.org/en/" target="_blank"><img
             src="https://img.shields.io/badge/node-8.1.2-brightgreen.svg"></a>
           <a href="https://vuejs.org/" target="_blank"><img src="https://img.shields.io/badge/vue-2.x-brightgreen.svg"></a>
@@ -14,26 +10,18 @@
             src="https://img.shields.io/badge/rethinkDB-2.x-brightgreen.svg"></a>
           <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank"><img
             src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
+          <a href="https://github.com/mayajuni/realtime-project" target="_blank"><img
+            src="https://img.shields.io/badge/github-repositories-blue.svg"></a>
         </div>
-
-        <h3>
-          Kanban-board
-        </h3>
-      </header>
+      </div>
+      <h3>
+        Kanban-board
+      </h3>
       <div class="board-canvas">
         <div class="board">
           <draggable :list="lists" :options="{group:'lists'}">
-            <div v-for="list in lists" class="list">
-
-              <div class="list-title">{{ list.title }}</div>
-
-              <div class="content">
-                <draggable :list="list.tasks" :options="{group:'tasks', draggable: '.task'}" class="tasks" :list-id="list.id">
-                  <div v-for="task in list.tasks" :task-id="task.id" class="task">
-                    <span>{{ task.title }}</span>
-                  </div>
-                </draggable>
-              </div>
+            <div v-for="list, index in lists" :key="index" class="list">
+              <kanban-list :list="list"></kanban-list>
             </div>
           </draggable>
         </div>
@@ -44,16 +32,18 @@
 
 <script>
   import draggable from 'vuedraggable'
+  import kanbanList from './list/list.component.vue'
 
   export default {
     name: 'kanvan',
     data () {
       return {
+        enableInput: false,
         lists: [
           {
             id: 1,
             title: 'list 1',
-            tasks: [
+            cards: [
               {id: 1, title: 'Task 1'},
               {id: 2, title: 'Task 2'},
               {id: 3, title: 'Task 3'}
@@ -62,7 +52,7 @@
           {
             id: 2,
             title: 'list 2',
-            tasks: [
+            cards: [
               {id: 4, title: 'Task 4'},
               {id: 5, title: 'Task 5'},
               {id: 6, title: 'Task 6'}
@@ -71,8 +61,11 @@
         ]
       }
     },
+    methods: {
+    },
     components: {
-      draggable
+      draggable,
+      kanbanList
     }
   }
 </script>
@@ -94,17 +87,13 @@
       margin-right: 0;
       transition: margin .1s ease-in;
 
-      header {
-        padding: 0 8px;
-        .github {
-          padding-top: 15px;
-        }
+      .icons {
+        padding: 15px 8px 0;
+      }
 
-        h3 {
-          text-align: center;
-          padding: 5px 0;
-          margin: 0;
-        }
+      h3 {
+        text-align: center;
+        padding: 15px 0;
       }
 
       .board-canvas {
@@ -133,26 +122,6 @@
             display: inline-block;
             vertical-align: top;
             white-space: nowrap;
-
-            .list-title {
-              padding: 5px;
-              border-top-left-radius: 10px;
-              border-top-right-radius: 10px;
-              color: #dddddd;
-              background-color: #252b74;
-            }
-
-            .content {
-              padding: 10px;
-              background-color: white;
-              border: 1px solid #252b74;
-              border-bottom-left-radius: 10px;
-              border-bottom-right-radius: 10px;
-
-              .tasks {
-                min-height: 10px;
-              }
-            }
           }
         }
       }

@@ -1,17 +1,19 @@
 <template>
   <div id="app">
     <header-component></header-component>
-    <router-view></router-view>
+    <kanban></kanban>
   </div>
 </template>
 
 <script>
-  import headerComponent from './components/realtime-project/layout/header.layout.vue'
+  import headerComponent from './components/layout/header.layout.vue'
+  import kanban from './components/view/kanban/kanban.view.vue'
 
   export default {
     name: 'app',
     components: {
-      headerComponent
+      headerComponent,
+      kanban
     }
   }
 </script>

@@ -6,7 +6,7 @@
 </template>
 
 <script>
-  import headerComponent from './components/realtime-project/layout/header.component.vue'
+  import headerComponent from './components/realtime-project/layout/header.layout.vue'
 
   export default {
     name: 'app',

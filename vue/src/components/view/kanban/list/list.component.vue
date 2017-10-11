@@ -3,20 +3,24 @@
     <div class="header row no-gutters">
       <div class="list-title col-11">
         <div class="text" v-if="!enableInput" @click="toggleInput">
-          {{ listTitle }}
+          {{ this.list.title }}
         </div>
         <div class="input" v-if="enableInput">
-          <input class="form-control" placeholder="list-title" ref="title" v-model="listTitle" @blur="toggleInput">
+          <input class="form-control" placeholder="list title" ref="title" v-model="listTitle" @blur="toggleInput">
         </div>
       </div>
-      <div class="remove col-1">
+      <div class="remove col-1" @click="removeList">
         x
       </div>
     </div>
     <div class="content">
+      <div class="input-group input-group-sm">
+        <input class="form-control" placeholder="card title">
+        <span class="input-group-addon" id="basic-addon2">+</span>
+      </div>
       <draggable :list="list.cards" :options="{group:'cards'}" class="cards" :list-id="list.id">
         <div v-for="card, index in list.cards" :key="index" class="task">
-          <kanban-card :card="card"></kanban-card>
+          <kanban-card :card="card" @remove="removeCard"></kanban-card>
         </div>
       </draggable>
     </div>
@@ -38,9 +42,6 @@
         enableInput: false
       }
     },
-    created () {
-      this.listTitle = this.list.title
-    },
     methods: {
       toggleInput () {
         this.enableInput = !this.enableInput
@@ -50,6 +51,14 @@
         } else {
           this.list.title = this.listTitle
         }
+      },
+      removeList () {
+        this.$emit('removeList', this.list.id)
+      },
+      removeCard (cardId) {
+        const test = this.list.cards.filter(card => card.id !== cardId)
+
+        this.list.cards = test
       }
     },
     components: {

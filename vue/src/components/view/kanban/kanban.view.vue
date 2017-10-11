@@ -21,7 +21,7 @@
         <div class="board">
           <draggable :list="lists" :options="{group:'lists'}">
             <div v-for="list, index in lists" :key="index" class="list">
-              <kanban-list :list="list"></kanban-list>
+              <kanban-list :list="list" @removeList="removeList"></kanban-list>
             </div>
           </draggable>
         </div>
@@ -62,6 +62,9 @@
       }
     },
     methods: {
+      removeList (listId) {
+        this.lists = this.lists.filter(list => list.id !== listId)
+      }
     },
     components: {
       draggable,

@@ -1,15 +1,13 @@
 <template>
-  <div class="row no-gutters">
-    <div class="card-info col-11">
-      <div class="text" v-if="!enableInput" @click="toggleInput">
-        {{ card.title }}
-      </div>
-      <div class="input" v-if="enableInput">
-        <input class="form-control" placeholder="card-title" ref="title" v-model="cardTitle" @blur="toggleInput">
-      </div>
+  <div class="card-info">
+    <div class="text" v-if="!enableInput" @click="showInput">
+      {{ card.title }}
     </div>
-    <div class="remove col-1" v-show="enableInput">
-      x
+    <div class="input row no-gutters" v-if="enableInput">
+      <input class="form-control col-11" placeholder="card-title" ref="title" v-model="cardTitle" @blur="closeInput">
+      <div class="remove col-1" @click="remove" v-show="enableInput">
+        x
+      </div>
     </div>
   </div>
 </template>
@@ -23,18 +21,30 @@
     data () {
       return {
         cardTitle: '',
-        enableInput: false
+        enableInput: false,
+        isRemove: false
       }
     },
     methods: {
-      toggleInput () {
-        this.enableInput = !this.enableInput
-        if (this.enableInput) {
-          this.cardTitle = this.card.title
-          this.$nextTick(() => this.$refs.title.focus())
-        } else {
-          this.card.title = this.cardTitle
-        }
+      showInput () {
+        this.enableInput = true
+        this.cardTitle = this.card.title
+        this.$nextTick(() => this.$refs.title.focus())
+      },
+      closeInput () {
+        // 삭제 버튼 때문에 셋타임아웃을 걸어 놓는다.
+        setTimeout(() => {
+          this.enableInput = false
+          if (!this.isRemove) {
+            this.card.title = this.cardTitle
+          } else {
+            this.isRemove = false
+          }
+        }, 10)
+      },
+      remove () {
+        this.isRemove = true
+        this.$emit('remove', this.card.id)
       }
     }
   }

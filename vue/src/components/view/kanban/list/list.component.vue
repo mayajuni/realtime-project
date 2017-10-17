@@ -15,8 +15,8 @@
     </div>
     <div class="content">
       <div class="input-group input-group-sm">
-        <input class="form-control" placeholder="card title">
-        <span class="input-group-addon" id="basic-addon2">+</span>
+        <input class="form-control" placeholder="card title" v-model="cardTitle" v-on:keyup.enter="addCard">
+        <span class="input-group-addon" id="basic-addon2" @click="addCard">+</span>
       </div>
       <draggable :list="list.cards" :options="{group:'cards'}" class="cards" :list-id="list.id">
         <div v-for="card, index in list.cards" :key="index" class="task">
@@ -39,6 +39,7 @@
     data () {
       return {
         listTitle: '',
+        cardTitle: '',
         enableInput: false
       }
     },
@@ -54,6 +55,12 @@
       },
       removeList () {
         this.$emit('removeList', this.list.id)
+      },
+      addCard () {
+        if (this.cardTitle) {
+          this.list.cards.unshift({id: Date.now, title: this.cardTitle})
+          this.cardTitle = ''
+        }
       },
       removeCard (cardId) {
         const test = this.list.cards.filter(card => card.id !== cardId)

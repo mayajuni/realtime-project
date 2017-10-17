@@ -17,6 +17,12 @@
       <h3>
         Kanban-board
       </h3>
+      <div class="add-list">
+        <div class="input-group input-group-sm">
+          <input class="form-control" placeholder="list title" v-model="listTitle" v-on:keyup.enter="addList">
+          <span class="input-group-addon" id="basic-addon2" @click="addList">ADD</span>
+        </div>
+      </div>
       <div class="board-canvas">
         <div class="board">
           <draggable :list="lists" :options="{group:'lists'}">
@@ -39,6 +45,7 @@
     data () {
       return {
         enableInput: false,
+        listTitle: '',
         lists: [
           {
             id: 1,
@@ -64,6 +71,12 @@
     methods: {
       removeList (listId) {
         this.lists = this.lists.filter(list => list.id !== listId)
+      },
+      addList () {
+        if (this.listTitle) {
+          this.lists.push({id: Date.now(), title: this.listTitle, cards: []})
+          this.listTitle = ''
+        }
       }
     },
     components: {
@@ -97,6 +110,12 @@
       h3 {
         text-align: center;
         padding: 15px 0;
+      }
+
+      .add-list {
+        max-width: 350px;
+        padding: 10px;
+        margin-bottom: 10px;
       }
 
       .board-canvas {

@@ -3,15 +3,27 @@
     <div class="kanban-wrapper">
       <div class="icons">
         <div>
-          <a href="https://nodejs.org/en/" target="_blank"><img
-            src="https://img.shields.io/badge/node-8.1.2-brightgreen.svg"></a>
-          <a href="https://vuejs.org/" target="_blank"><img src="https://img.shields.io/badge/vue-2.x-brightgreen.svg"></a>
-          <a href="https://www.rethinkdb.com/" target="_blank"><img
-            src="https://img.shields.io/badge/rethinkDB-2.x-brightgreen.svg"></a>
-          <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank"><img
-            src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
-          <a href="https://github.com/mayajuni/realtime-project" target="_blank"><img
-            src="https://img.shields.io/badge/github-repositories-blue.svg"></a>
+          <a href="https://nodejs.org/en/" target="_blank">
+            <img src="https://img.shields.io/badge/node-8.1.2-brightgreen.svg">
+          </a>
+          <a href="https://vuejs.org/" target="_blank">
+            <img src="https://img.shields.io/badge/vue-2.x-brightgreen.svg">
+          </a>
+          <a href="https://www.rethinkdb.com/" target="_blank">
+            <img src="https://img.shields.io/badge/rethinkDB-2.x-brightgreen.svg">
+          </a>
+          <a href="https://github.com/uNetworking/uWebSockets" target="_blank">
+            <img src="https://img.shields.io/badge/uws-8.x-brightgreen.svg">
+          </a>
+          <a href="https://www.typescriptlang.org/" target="_blank">
+            <img src="https://img.shields.io/badge/typescript-2.x-brightgreen.svg">
+          </a>
+          <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">
+            <img src="https://img.shields.io/badge/license-MIT-blue.svg">
+          </a>
+          <a href="https://github.com/mayajuni/realtime-project" target="_blank">
+            <img src="https://img.shields.io/badge/github-repositories-blue.svg">
+          </a>
         </div>
       </div>
       <h3>
@@ -27,7 +39,8 @@
         <div class="board">
           <draggable :list="lists" :options="{group:'lists'}" @change="change">
             <div v-for="list, index in lists" :key="index" class="list">
-              <kanban-list :list="list" @removeList="removeList" @updateList="updateList"></kanban-list>
+              <kanban-list :list="list" @removeList="removeList" @updateList="updateList"
+                           @removeCard="removeCard" @addCard='addCard' @moveCard="moveCard" @updateCard="updateCard"></kanban-list>
             </div>
           </draggable>
         </div>
@@ -57,10 +70,12 @@
       socketClient.unsubscribe('Board')
     },
     methods: {
-      change (test) {
-        const moved = test.moved
-        const list = {...moved.element, order: moved.newIndex, oldOrder: moved.oldIndex}
-        this.addEvent('moveList', list)
+      change (event) {
+        if (event.moved) {
+          const moved = event.moved
+          const list = {...moved.element, order: moved.newIndex}
+          this.addEvent('moveList', list)
+        }
       },
       removeList (listId) {
         this.addEvent('removeList', {id: listId})
@@ -74,6 +89,18 @@
       },
       updateList (list) {
         this.addEvent('updateList', list)
+      },
+      moveCard (card) {
+        this.addEvent('moveCard', card)
+      },
+      addCard (card) {
+        this.addEvent('addCard', card)
+      },
+      removeCard (ids) {
+        this.addEvent('removeCard', ids)
+      },
+      updateCard (card) {
+        this.addEvent('updateCard', card)
       },
       addEvent (action, payload) {
         this.$store.dispatch('addEvent', {

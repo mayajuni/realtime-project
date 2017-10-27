@@ -1,13 +1,14 @@
 <template>
-  <div class="card-info">
-    <div class="text" v-if="!enableInput" @click="showInput">
+  <div class="card-info row no-gutters">
+    <div class="text col-11" v-if="!enableInput" @click="showInput">
       {{ card.title }}
     </div>
-    <div class="input row no-gutters" v-if="enableInput">
-      <input class="form-control col-11" placeholder="card-title" ref="title" v-model="cardTitle" @blur="hideInput" v-on:keyup.enter="changeCard">
-      <div class="remove col-1" @click="remove" v-show="enableInput">
-        x
-      </div>
+    <div class="input col-11" v-if="enableInput">
+      <input class="form-control" placeholder="card-title" ref="title" v-model="cardTitle" @blur="hideInput"
+             v-on:keyup.enter="updateCard">
+    </div>
+    <div class="remove col-1" @click="remove">
+      x
     </div>
   </div>
 </template>
@@ -21,8 +22,7 @@
     data () {
       return {
         cardTitle: '',
-        enableInput: false,
-        isRemove: false
+        enableInput: false
       }
     },
     methods: {
@@ -31,23 +31,17 @@
         this.cardTitle = this.card.title
         this.$nextTick(() => this.$refs.title.focus())
       },
-      changeCard () {
+      updateCard () {
         this.enableInput = false
         if (this.card.title !== this.cardTitle) {
           this.card.title = this.cardTitle
-          this.$emit('changeCard')
+          this.$emit('updateCard', this.card)
         }
       },
       hideInput () {
         // 삭제 버튼 때문에 셋타임아웃을 걸어 놓는다.
-        setTimeout(() => {
-          this.enableInput = false
-          if (!this.isRemove) {
-            this.changeCard()
-          } else {
-            this.isRemove = false
-          }
-        }, 10)
+        this.enableInput = false
+        this.updateCard()
       },
       remove () {
         this.isRemove = true
@@ -60,6 +54,7 @@
 <style scoped lang='scss'>
   .card-info {
     cursor: pointer;
+    position: relative;
 
     .text {
       padding: 1px 4px;
@@ -74,11 +69,18 @@
         border-radius: .2rem;
       }
     }
-  }
 
-  .remove {
-    cursor: pointer;
-    text-align: center;
-    font-weight: 600;
+    .remove {
+      display: none;
+      cursor: pointer;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    &:hover {
+      .remove {
+        display: block;
+      }
+    }
   }
 </style>

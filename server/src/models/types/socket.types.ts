@@ -1,4 +1,4 @@
-import { WebSocket } from '../definition/websocket';
+import { WebSocket } from '../definitions/websocket';
 
 export type send = (route: string, action: string, payload: any) => void;
 

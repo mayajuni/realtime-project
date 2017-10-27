@@ -19,9 +19,9 @@
         <input class="form-control" placeholder="card title" v-model="cardTitle" v-on:keyup.enter="addCard">
         <span class="input-group-addon" id="basic-addon2" @click="addCard">+</span>
       </div>
-      <draggable :list="list.cards" :options="{group:'cards'}" class="cards" :list-id="list.id" @change="moved">
+      <draggable :list="list.cards" :options="{group:'cards'}" class="cards" :list-id="list.id" @change="change">
         <div v-for="card, index in list.cards" :key="index" class="task">
-          <kanban-card :card="card" @remove="removeCard" @changeCard="changeCard"></kanban-card>
+          <kanban-card :card="card" @remove="removeCard" @updateCard="updateCard"></kanban-card>
         </div>
       </draggable>
     </div>
@@ -45,8 +45,20 @@
       }
     },
     methods: {
-      moved (test) {
-        console.log(test)
+      change (event) {
+        if (event.moved) {
+          const moved = event.moved
+          const card = {...moved.element, order: moved.newIndex}
+          this.$emit('moveCard', card)
+        } else if (event.added) {
+          const added = event.added
+          const card = {...added.element, order: added.newIndex, listId: this.list.id}
+          this.$emit('addCard', card)
+        } else if (event.removed) {
+          const removed = event.removed
+          const ids = {id: removed.element.id, listId: this.list.id}
+          this.$emit('removeCard', ids)
+        }
       },
       showInput () {
         this.enableInput = true
@@ -66,18 +78,16 @@
       },
       addCard () {
         if (this.cardTitle) {
-          this.list.cards.unshift({id: Date.now().toString(), title: this.cardTitle})
+          this.$emit('addCard', {listId: this.list.id, title: this.cardTitle, order: 0})
           this.cardTitle = ''
-          this.$emit('changeList')
         }
       },
-      changeCard () {
-        this.$emit('changeList')
+      updateCard (card) {
+        card.listId = this.list.id
+        this.$emit('updateCard', card)
       },
       removeCard (cardId) {
-        this.list.cards = this.list.cards.filter(card => card.id !== cardId)
-        /* 무언가 변경이 이루어진다는 것을 최상위에 알린다. */
-        this.$emit('changeList')
+        this.$emit('removeCard', {listId: this.list.id, id: cardId})
       }
     },
     components: {

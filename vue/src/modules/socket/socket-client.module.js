@@ -3,7 +3,7 @@ import eventEmiter from '../event-emiter/event-emiter.module'
 class SocketClient {
   constructor () {
     this.url = `ws://localhost:3000`
-    this.reconnectDelay = [300, 2000, 5, 1.3]
+    this.reconnectDelay = [300, 1000, 5, 1.3]
     this.retries = this.reconnectDelay[2] || Infinity
     this.subscribes = new Set()
   }
@@ -42,12 +42,12 @@ class SocketClient {
       if (this.reconnecting) {
         this.resubscribe()
       }
-
       this.reconnecting = false
     }
 
     ws.onclose = async event => {
       console.log('[socket] websocket disconnected')
+      this.reconnecting = false
       this.reconnect()
     }
 

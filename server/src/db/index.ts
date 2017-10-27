@@ -9,7 +9,9 @@ export default class InitDB {
             users: {
                 key: 'email'
             },
-            lists: {}
+            lists: {
+                index: ['order']
+            }
         };
     }
 

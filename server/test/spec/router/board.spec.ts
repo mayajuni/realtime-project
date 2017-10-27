@@ -1,8 +1,8 @@
 import * as WebSocket from 'uws';
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
-import { join } from 'path';
-import { expect } from 'chai';
+import {join} from 'path';
+import {expect} from 'chai';
 
 
 chai.should();
@@ -33,7 +33,6 @@ const login = (ws: any, done: any) => {
 };
 
 let ws: any;
-let id: string;
 describe('Board Test', () => {
     before(done => {
         ws = new WebSocket(url, 'echo-protocol');
@@ -46,62 +45,22 @@ describe('Board Test', () => {
         };
     });
 
-    it('insert', done => {
+    it('change', done => {
         const payload: any = {
-            name: 'test',
-            order: 0,
-            items: []
+            lists: [{title: 'test1', cards: []}, {title: 'test2', cards: [{id: Date.now(), title: 'card1'}]}]
         };
         ws.send(JSON.stringify({route: 'Board', action: 'subscribe'}));
+        let index = 0;
         ws.onmessage = (event: any) => {
             ws.send(JSON.stringify({route: 'Board', action: 'unsubscribe'}));
-
             const params = JSON.parse(event.data);
             params.route.should.equal('board');
             params.action.should.equal('subscribe');
-            params.payload.should.haveOwnProperty('new_val');
-            expect(params.payload.old_val).to.be.null;
-            id = params.payload.new_val.id;
-            done();
+            if (index === 0) {
+                done();
+                index++
+            }
         };
-        setTimeout(() => ws.send(JSON.stringify({route: 'Board', action: 'addList', payload: payload})));
-    });
-
-    it('update', done => {
-        const payload: any = {
-            id: id,
-            name: 'test222',
-            order: 1,
-            items: [{name: 'sub'}]
-        };
-        ws.send(JSON.stringify({route: 'Board', action: 'subscribe'}));
-        ws.onmessage = (event: any) => {
-            ws.send(JSON.stringify({route: 'Board', action: 'unsubscribe'}));
-
-            const params = JSON.parse(event.data);
-            params.route.should.equal('board');
-            params.action.should.equal('subscribe');
-            params.payload.should.haveOwnProperty('new_val');
-            params.payload.should.haveOwnProperty('old_val');
-            params.payload.new_val.name.should.equal(payload.name);
-            params.payload.new_val.items[0].name.should.equal(payload.items[0].name);
-            done();
-        };
-        setTimeout(() => ws.send(JSON.stringify({route: 'Board', action: 'updateList', payload: payload})));
-    });
-
-    it('delete', done => {
-        ws.send(JSON.stringify({route: 'Board', action: 'subscribe'}));
-        ws.onmessage = (event: any) => {
-            ws.send(JSON.stringify({route: 'Board', action: 'unsubscribe'}));
-
-            const params = JSON.parse(event.data);
-            params.route.should.equal('board');
-            params.action.should.equal('subscribe');
-            expect(params.payload.new_val).to.be.null;
-            params.payload.should.haveOwnProperty('old_val');
-            done();
-        };
-        setTimeout(() => ws.send(JSON.stringify({route: 'Board', action: 'removeList', payload: {id: id}})));
+        setTimeout(() => ws.send(JSON.stringify({route: 'Board', action: 'changeLists', payload: payload})));
     });
 });

@@ -25,9 +25,9 @@
       </div>
       <div class="board-canvas">
         <div class="board">
-          <draggable :list="lists" :options="{group:'lists'}">
+          <draggable :list="lists" :options="{group:'lists'}" @change="change">
             <div v-for="list, index in lists" :key="index" class="list">
-              <kanban-list :list="list" @removeList="removeList"></kanban-list>
+              <kanban-list :list="list" @removeList="removeList" @updateList="updateList"></kanban-list>
             </div>
           </draggable>
         </div>
@@ -39,45 +39,54 @@
 <script>
   import draggable from 'vuedraggable'
   import kanbanList from './list/list.component.vue'
+  import { mapGetters } from 'vuex'
+  import socketClient from '../../../modules/socket/socket-client.module'
 
   export default {
     name: 'kanvan',
     data () {
       return {
         enableInput: false,
-        listTitle: '',
-        lists: [
-          {
-            id: 1,
-            title: 'list 1',
-            cards: [
-              {id: 1, title: 'Task 1'},
-              {id: 2, title: 'Task 2'},
-              {id: 3, title: 'Task 3'}
-            ]
-          },
-          {
-            id: 2,
-            title: 'list 2',
-            cards: [
-              {id: 4, title: 'Task 4'},
-              {id: 5, title: 'Task 5'},
-              {id: 6, title: 'Task 6'}
-            ]
-          }
-        ]
+        listTitle: ''
       }
     },
+    created () {
+      socketClient.subscribe('Board')
+    },
+    beforeDestroy () {
+      socketClient.unsubscribe('Board')
+    },
     methods: {
+      change (test) {
+        const moved = test.moved
+        const list = {...moved.element, order: moved.newIndex, oldOrder: moved.oldIndex}
+        this.addEvent('moveList', list)
+      },
       removeList (listId) {
-        this.lists = this.lists.filter(list => list.id !== listId)
+        this.addEvent('removeList', {id: listId})
       },
       addList () {
         if (this.listTitle) {
-          this.lists.push({id: Date.now(), title: this.listTitle, cards: []})
+          const order = this.$store.getters.lists.length
+          this.addEvent('addList', {title: this.listTitle, cards: [], order})
           this.listTitle = ''
         }
+      },
+      updateList (list) {
+        this.addEvent('updateList', list)
+      },
+      addEvent (action, payload) {
+        this.$store.dispatch('addEvent', {
+          router: 'Board',
+          action: action,
+          payload: payload
+        })
       }
+    },
+    computed: {
+      ...mapGetters([
+        'lists'
+      ])
     },
     components: {
       draggable,

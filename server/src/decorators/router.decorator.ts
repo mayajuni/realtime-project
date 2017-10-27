@@ -12,6 +12,7 @@ export function Router(name?: string) {
                 if (!targetInstance[action]) {
                     throw new SocketError('not found action', 'router', 404);
                 }
+                console.log(route, action);
                 const result = targetInstance[action]({route, action, payload, ws, send, r});
                 if (result instanceof Promise) {
                     result.catch((error) => {

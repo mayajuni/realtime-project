@@ -4,7 +4,7 @@
       {{ card.title }}
     </div>
     <div class="input row no-gutters" v-if="enableInput">
-      <input class="form-control col-11" placeholder="card-title" ref="title" v-model="cardTitle" @blur="closeInput">
+      <input class="form-control col-11" placeholder="card-title" ref="title" v-model="cardTitle" @blur="hideInput" v-on:keyup.enter="changeCard">
       <div class="remove col-1" @click="remove" v-show="enableInput">
         x
       </div>
@@ -31,12 +31,19 @@
         this.cardTitle = this.card.title
         this.$nextTick(() => this.$refs.title.focus())
       },
-      closeInput () {
+      changeCard () {
+        this.enableInput = false
+        if (this.card.title !== this.cardTitle) {
+          this.card.title = this.cardTitle
+          this.$emit('changeCard')
+        }
+      },
+      hideInput () {
         // 삭제 버튼 때문에 셋타임아웃을 걸어 놓는다.
         setTimeout(() => {
           this.enableInput = false
           if (!this.isRemove) {
-            this.card.title = this.cardTitle
+            this.changeCard()
           } else {
             this.isRemove = false
           }

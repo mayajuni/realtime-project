@@ -2,11 +2,12 @@
   <div>
     <div class="header row no-gutters">
       <div class="list-title col-11">
-        <div class="text" v-if="!enableInput" @click="toggleInput">
+        <div class="text" v-if="!enableInput" @click="showInput">
           {{ this.list.title }}
         </div>
         <div class="input" v-if="enableInput">
-          <input class="form-control" placeholder="list title" ref="title" v-model="listTitle" @blur="toggleInput">
+          <input class="form-control" placeholder="list title" ref="title" v-model="listTitle" @blur="hideInput"
+                 v-on:keyup.enter="hideInput">
         </div>
       </div>
       <div class="remove col-1" @click="removeList">
@@ -18,9 +19,9 @@
         <input class="form-control" placeholder="card title" v-model="cardTitle" v-on:keyup.enter="addCard">
         <span class="input-group-addon" id="basic-addon2" @click="addCard">+</span>
       </div>
-      <draggable :list="list.cards" :options="{group:'cards'}" class="cards" :list-id="list.id">
+      <draggable :list="list.cards" :options="{group:'cards'}" class="cards" :list-id="list.id" @change="moved">
         <div v-for="card, index in list.cards" :key="index" class="task">
-          <kanban-card :card="card" @remove="removeCard"></kanban-card>
+          <kanban-card :card="card" @remove="removeCard" @changeCard="changeCard"></kanban-card>
         </div>
       </draggable>
     </div>
@@ -44,13 +45,20 @@
       }
     },
     methods: {
-      toggleInput () {
-        this.enableInput = !this.enableInput
-        if (this.enableInput) {
-          this.listTitle = this.list.title
-          this.$nextTick(() => this.$refs.title.focus())
-        } else {
+      moved (test) {
+        console.log(test)
+      },
+      showInput () {
+        this.enableInput = true
+        this.listTitle = this.list.title
+        this.$nextTick(() => this.$refs.title.focus())
+      },
+      hideInput () {
+        this.enableInput = false
+        if (this.list.title !== this.listTitle) {
           this.list.title = this.listTitle
+          /* 무언가 변경이 이루어진다는 것을 최상위에 알린다. */
+          this.$emit('updateList', this.list)
         }
       },
       removeList () {
@@ -58,14 +66,18 @@
       },
       addCard () {
         if (this.cardTitle) {
-          this.list.cards.unshift({id: Date.now, title: this.cardTitle})
+          this.list.cards.unshift({id: Date.now().toString(), title: this.cardTitle})
           this.cardTitle = ''
+          this.$emit('changeList')
         }
       },
+      changeCard () {
+        this.$emit('changeList')
+      },
       removeCard (cardId) {
-        const test = this.list.cards.filter(card => card.id !== cardId)
-
-        this.list.cards = test
+        this.list.cards = this.list.cards.filter(card => card.id !== cardId)
+        /* 무언가 변경이 이루어진다는 것을 최상위에 알린다. */
+        this.$emit('changeList')
       }
     },
     components: {
@@ -114,6 +126,10 @@
     border: 1px solid #252b74;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
+
+    .input-group {
+      margin-bottom: 10px;
+    }
 
     .cards {
       min-height: 10px;

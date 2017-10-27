@@ -12,9 +12,6 @@ import { Card, List } from '../../models/interfaces/board.interface';
 export class Board {
     private cursor: any;
 
-    constructor() {
-    }
-
     async subscribe({send, r}: socketParams) {
         /* 초기 데이터를 내려준다. */
         const lists = await r.table('lists').orderBy('order').run();

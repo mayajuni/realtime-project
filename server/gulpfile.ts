@@ -135,7 +135,7 @@ gulp.task('server-dev', (done: any) => {
  */
 gulp.task('server', () => {
     const stream = nodemon({
-        script: 'dist/server.js',
+        script: __dirname + '/dist/server.js',
         ext: 'js',
         env: {}
     });

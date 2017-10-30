@@ -64,10 +64,10 @@
       }
     },
     created () {
-      socketClient.subscribe('Board')
+      socketClient.subscribe('Kanban')
     },
     beforeDestroy () {
-      socketClient.unsubscribe('Board')
+      socketClient.unsubscribe('Kanban')
     },
     methods: {
       change (event) {
@@ -104,7 +104,7 @@
       },
       addEvent (action, payload) {
         this.$store.dispatch('addEvent', {
-          router: 'Board',
+          router: 'Kanban',
           action: action,
           payload: payload
         })

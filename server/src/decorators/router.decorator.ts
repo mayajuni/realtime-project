@@ -9,6 +9,7 @@ export function Router(name?: string) {
         eventEmitter.on(route, ({action, payload, ws, send, r}: socketParams) => {
             // 에러 처리를 위해서 promise로 감싼다.
             try {
+                /*console.log(route, action, payload);*/
                 if (!targetInstance[action]) {
                     throw new SocketError('not found action', 'router', 404);
                 }

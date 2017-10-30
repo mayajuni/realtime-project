@@ -1,7 +1,5 @@
-import { User } from './user/user.router';
-import { Board } from './board/board.router';
+import { Kanban } from './kanban/kanban.router';
 
 export const routes = [
-    User,
-    Board
+    Kanban
 ];

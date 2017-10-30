@@ -2,7 +2,7 @@ const server = require('../dist/server');
 const spawn = require('cross-spawn');
 
 server.ready.then(() => {
-    const runner = spawn('./node_modules/.bin/mocha', ['-r', 'ts-node/register', './**/**.spec.ts'], { stdio: 'inherit' });
+    const runner = spawn('./node_modules/.bin/mocha', ['-r', 'ts-node/register', './**/kanban.spec.ts'], { stdio: 'inherit' });
 
     runner.on('exit', function (code) {
         server.close();

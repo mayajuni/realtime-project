@@ -4,13 +4,13 @@ export default class InitDB {
     r: any;
     initDB: Object;
 
+    /**
+     * key: 기본키
+     * index: 인덱스
+     */
     constructor() {
         this.initDB = {
-            users: {
-                key: 'email'
-            },
-            lists: {
-                index: ['order']
+            kanban: {
             }
         };
     }

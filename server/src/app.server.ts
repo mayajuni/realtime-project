@@ -1,7 +1,7 @@
 import { Server } from 'uws';
 import { LoggerModule } from './modules/logger.module';
 import InitDB from './db';
-import { WebSocket } from './models/definition/websocket';
+import { WebSocket } from './models/definitions/websocket';
 import { checkRoute, eventEmitter } from './modules/events.module';
 import { SocketError } from './modules/error.module';
 import { routes } from './router/index';

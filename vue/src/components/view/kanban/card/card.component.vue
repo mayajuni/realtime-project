@@ -5,9 +5,9 @@
     </div>
     <div class="input col-11" v-if="enableInput">
       <input class="form-control" placeholder="card-title" ref="title" v-model="cardTitle" @blur="hideInput"
-             v-on:keyup.enter="updateCard">
+             v-on:keyup.enter="updateCardTitle">
     </div>
-    <div class="remove col-1" @click="remove">
+    <div class="remove col-1" @click="deleteCard">
       x
     </div>
   </div>
@@ -31,21 +31,19 @@
         this.cardTitle = this.card.title
         this.$nextTick(() => this.$refs.title.focus())
       },
-      updateCard () {
+      updateCardTitle () {
         this.enableInput = false
         if (this.card.title !== this.cardTitle) {
           this.card.title = this.cardTitle
-          this.$emit('updateCard', this.card)
+          this.$emit('updateCardTitle', this.card)
         }
       },
       hideInput () {
-        // 삭제 버튼 때문에 셋타임아웃을 걸어 놓는다.
         this.enableInput = false
-        this.updateCard()
+        this.updateCardTitle()
       },
-      remove () {
-        this.isRemove = true
-        this.$emit('remove', this.card.id)
+      deleteCard () {
+        this.$emit('deleteCard', this.card.id)
       }
     }
   }

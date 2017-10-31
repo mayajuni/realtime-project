@@ -39,8 +39,9 @@
         <div class="board">
           <draggable :list="lists" :options="{group:'lists'}" @change="change">
             <div v-for="list, index in lists" :key="index" class="list">
-              <kanban-list :list="list" @removeList="removeList" @updateList="updateList"
-                           @removeCard="removeCard" @addCard='addCard' @moveCard="moveCard" @updateCard="updateCard"></kanban-list>
+              <kanban-list :list="list" @deleteList="deleteList" @updateListTitle="updateListTitle"
+                           @deleteCard="deleteCard" @addCard='addCard' @moveCard="moveCard"
+                           @updateCardTitle="updateCardTitle"></kanban-list>
             </div>
           </draggable>
         </div>
@@ -60,7 +61,10 @@
     data () {
       return {
         enableInput: false,
-        listTitle: ''
+        listTitle: '',
+        ...mapGetters([
+          'kanbanId'
+        ])
       }
     },
     created () {
@@ -73,22 +77,21 @@
       change (event) {
         if (event.moved) {
           const moved = event.moved
-          const list = {...moved.element, order: moved.newIndex}
+          const list = {id: moved.element.id, order: moved.newIndex}
           this.addEvent('moveList', list)
         }
       },
-      removeList (listId) {
-        this.addEvent('removeList', {id: listId})
+      deleteList (listId) {
+        this.addEvent('deleteList', {id: listId})
       },
       addList () {
         if (this.listTitle) {
-          const order = this.$store.getters.lists.length
-          this.addEvent('addList', {title: this.listTitle, cards: [], order})
+          this.addEvent('addList', {title: this.listTitle, cards: []})
           this.listTitle = ''
         }
       },
-      updateList (list) {
-        this.addEvent('updateList', list)
+      updateListTitle (list) {
+        this.addEvent('updateListTitle', list)
       },
       moveCard (card) {
         this.addEvent('moveCard', card)
@@ -96,13 +99,14 @@
       addCard (card) {
         this.addEvent('addCard', card)
       },
-      removeCard (ids) {
-        this.addEvent('removeCard', ids)
+      deleteCard (ids) {
+        this.addEvent('deleteCard', ids)
       },
-      updateCard (card) {
-        this.addEvent('updateCard', card)
+      updateCardTitle (card) {
+        this.addEvent('updateCardTitle', card)
       },
       addEvent (action, payload) {
+        payload.kanbanId = this.kanbanId()
         this.$store.dispatch('addEvent', {
           router: 'Kanban',
           action: action,

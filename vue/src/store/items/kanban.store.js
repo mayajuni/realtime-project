@@ -1,42 +1,27 @@
 const kanban = {
   state: {
-    lists: []
+    kanban: {}
   },
   actions: {
-    initLists (context, lists) {
-      context.commit('initLists', lists)
+    initKanban (context, kanban) {
+      context.commit('initKanban', kanban)
     },
-    addList (context, list) {
-      context.commit('addList', list)
-    },
-    updateList (context, list) {
-      context.commit('updateList', list)
-    },
-    removeList (context, listId) {
-      context.commit('removeList', listId)
+    updateKanban (context, kanban) {
+      context.commit('updateKanban', kanban)
     }
   },
   getters: {
-    lists: state => state.lists.sort((a, b) => a.order < b.order ? -1 : a.order > b.order ? 1 : 0)
+    kanban: state => state.kanban,
+    lists: state => state.kanban.lists ? state.kanban.lists.sort((a, b) => a.order < b.order ? -1 : a.order > b.order ? 1 : 0) : [],
+    kanbanId: state => state.kanban.id
   },
   mutations: {
-    initLists (state, lists) {
-      state.lists = lists
+    initKanban (state, kanban) {
+      state.kanban = kanban
     },
-    addList (state, list) {
-      state.lists.push(list)
-    },
-    removeList (state, listId) {
-      state.lists = state.lists.filter(list => list.id !== listId)
-    },
-    updateList (state, updatedList) {
-      state.lists = state.lists.map(list => {
-        if (list.id === updatedList.id) {
-          list = updatedList
-        }
-
-        return list
-      })
+    // 위의 init과 똑같은 역활을 하지만 추후 다른 부분이 생길 가능성이 있어서 따로 분리.
+    updateKanban (state, kanban) {
+      state.kanban = kanban
     }
   }
 }

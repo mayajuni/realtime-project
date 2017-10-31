@@ -9,7 +9,7 @@ const socketPlugin = store => {
     }
 
     if (action) {
-      console.log(action, payload)
+      console.log('receive', action, payload)
       store.dispatch(action, payload)
     }
   })
@@ -21,6 +21,7 @@ const socketPlugin = store => {
   store.subscribe((mutation) => {
     if (mutation.type === 'addEvent') {
       const payload = mutation.payload
+      console.log('send', payload.action, payload.payload)
       socketClient.send(payload.router, payload.action, payload.payload)
       store.dispatch('removeEvent', mutation.payload)
     }

@@ -16,11 +16,17 @@ export class Kanban {
     constructor() {
     }
 
-    async subscribe({send, r, payload}: socketParams) {
-        /* 초기 데이터를 내려준다. */
-        const kanban = await r.table('kanban').get(payload.kanbanId).run();
-        send('kanban', 'initLists', kanban);
-        const subscribe = r.table('kanban').get(payload.kanbanId).changes().run();
+    async subscribe({send, r}: socketParams) {
+        // 초기 데이터를 내려준다. 초기버전은 카반보드가 1개만 있는 버젼이다. 카반이 없으면 insert로 만들어고 있으면 있는 것을 내려준다.
+        const kanbans = await r.table('kanban').run();
+        let kanban = kanbans[0];
+        if (kanbans.length === 0) {
+            kanban = {title: 'init', lists: []};
+            const result = await r.table('kanban').insert(kanban);
+            kanban.id = result.generated_keys[0];
+        }
+        send('kanban', 'initKanban', kanban);
+        const subscribe = r.table('kanban').get(kanban.id).changes().run();
         subscribe.then((cursor: any) => {
             this.cursor = cursor;
             cursor.each((err: any, data: any) => {
@@ -101,34 +107,23 @@ export class Kanban {
 
     @Validation(addCardSchema)
     async addCard({payload, r}: socketParams) {
-        await this.updateKanbanLists(payload, r, async (kanban: any) => {
+        await this.updateKanbanCards(payload, r, async (kanban: any, list: List) => {
             // card의 고유의 값
             const uuid = await r.uuid().run();
+            const cards = list.cards;
 
-            const lists = kanban.lists.filter((list: List) => list.id === payload.listId);
-            if (!lists[0]) {
-                throw new SocketError('check list id', 'Kanban addCard', 400);
-            }
-            const cards = lists[0].cards;
+            payload.id = payload.id ? payload.id : uuid;
+            cards.splice(payload.order ? payload.order : 0, 0, payload);
+            this.updateOrder(cards);
 
-            delete payload.listId;
-            payload.id = uuid;
-            payload.order = cards.length;
-            cards.push(payload);
-
-            return kanban.lists;
+            return list;
         });
     }
 
     @Validation(updateCardTitleSchema)
     async updateCardTitle({payload, r}: socketParams) {
-        await this.updateKanbanLists(payload, r, async (kanban: any) => {
-            const lists = kanban.lists.filter((list: List) => list.id === payload.listId);
-            if (!lists[0]) {
-                throw new SocketError('check list id', 'Kanban addCard', 400);
-            }
-
-            lists[0].cards.map((card: Card) => {
+        await this.updateKanbanCards(payload, r, async (kanban: any, list: List) => {
+            list.cards.map((card: Card) => {
                 if (card.id === payload.id) {
                     card.title = payload.title;
                 }
@@ -136,54 +131,40 @@ export class Kanban {
                 return card;
             });
 
-            return kanban.lists;
+            return list;
         });
     }
 
     @Validation(moveCardSchema)
     async moveCard({payload, r}: socketParams) {
-        await this.updateKanbanLists(payload, r, async (kanban: any) => {
-            const lists = kanban.lists.filter((list: List) => list.id === payload.listId);
-            if (!lists[0]) {
-                throw new SocketError('check list id', 'Kanban addCard', 400);
-            }
-
-            const card = lists[0].cards.filter((card: Card) => card.id === payload.id)[0];
+        await this.updateKanbanCards(payload, r, async (kanban: any, list: List) => {
+            const card = list.cards.filter((card: Card) => card.id === payload.id)[0];
             card.order = payload.order;
 
-            const cards = lists[0].cards
+            const cards = list.cards
                 .filter((card: Card) => card.id !== payload.id)
                 .sort((a: any, b: any) => a.order < b.order ? -1 : a.order > b.order ? 1 : 0);
 
             cards.splice(payload.order, 0, card);
 
             this.updateOrder(cards);
-            return kanban.lists;
+
+            return list;
         });
     }
 
     @Validation(deleteCardSchema)
     async deleteCard({payload, r}: socketParams) {
-        await this.updateKanbanLists(payload, r, async (kanban: any) => {
-            const lists = kanban.lists.filter((list: List) => list.id === payload.listId);
-            if (!lists[0]) {
-                throw new SocketError('check list id', 'Kanban addCard', 400);
-            }
+        await this.updateKanbanCards(payload, r, async (kanban: any, list: List) => {
+            const cards = list.cards
+                .filter((card: Card) => card.id !== payload.id)
+                .sort((a: any, b: any) => a.order < b.order ? -1 : a.order > b.order ? 1 : 0);
 
-            kanban.lists.map((list: List) => {
-                if (list.id === payload.listId) {
-                    const cards = list.cards
-                        .filter((card: Card) => card.id !== payload.id)
-                        .sort((a: any, b: any) => a.order < b.order ? -1 : a.order > b.order ? 1 : 0);
+            this.updateOrder(cards);
 
-                    this.updateOrder(cards);
-                    list.cards = cards;
-                }
+            list.cards = cards;
 
-                return list;
-            });
-
-            return kanban.lists;
+            return list;
         });
     }
 
@@ -195,6 +176,25 @@ export class Kanban {
         const lists = await fn(kanban);
 
         await r.table('kanban').get(kanbanId).update({lists: lists}).run();
+    }
+
+    async updateKanbanCards(payload: any, r: any, fn: Function) {
+        const kanbanId = payload.kanbanId;
+        const kanban = await r.table('kanban').get(kanbanId).run();
+        delete payload.kanbanId;
+
+        const listId = payload.listId;
+        delete payload.listId;
+
+        const lists = kanban.lists.filter((list: List) => list.id === listId);
+        if (!lists[0]) {
+            throw new SocketError('check list id', 'Kanban addCard', 400);
+        }
+
+        const list = await fn(kanban, lists[0]);
+
+        await r.table('kanban').get(kanban.id)
+            .update((row: any) => ({lists: row('lists').filter((client: any) => client('id').ne(listId)).append(list)})).run();
     }
 
     private updateOrder(items: List[] | Card[]) {

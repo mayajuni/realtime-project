@@ -57,8 +57,7 @@ export const moveListSchema = {
         order: {
             description: 'order',
             type: 'number'
-        },
-        ...addListSchema.properties
+        }
     },
     required: ['id', 'order', 'kanbanId']
 };
@@ -96,6 +95,10 @@ export const addCardSchema = {
             description: 'title',
             type: 'string',
             minLength: 1
+        },
+        order: {
+            description: 'order',
+            type: 'number'
         }
     },
     required: ['listId', 'kanbanId', 'title']

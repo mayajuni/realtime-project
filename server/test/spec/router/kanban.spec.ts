@@ -86,7 +86,7 @@ describe('Kanban Test', () => {
                 ws.send(JSON.stringify({route: 'Kanban', action: 'unsubscribe'}));
                 const params = JSON.parse(event.data);
                 params.route.should.equal('kanban');
-                params.action.should.equal('initLists');
+                params.action.should.equal('initKanban');
                 ws.close();
                 done();
             };
@@ -175,13 +175,16 @@ describe('Kanban Test', () => {
         const payload: any = {
             kanbanId: kanbanId,
             listId: cardListId,
-            title: Date.now().toString()
+            title: Date.now().toString(),
+            order: 1,
         };
 
         connectWs(async () => {
             checkAndDone(done, kanbanId, (kanbanLists: any[]) => {
                 const list = kanbanLists.filter((list: List) => list.id === payload.listId)[0];
                 expect(list).to.be.not.undefined;
+                expect(list.cards[payload.order].title).equal(payload.title);
+                expect(list.cards[payload.order].order).equal(payload.order);
                 const card = list.cards.filter((card: Card) => card.title === payload.title)[0];
                 expect(card).to.be.not.undefined;
                 cardId = card.id;
@@ -240,7 +243,7 @@ describe('Kanban Test', () => {
     });
 
 
-    it('delete list', done => {
+    it('delete card', done => {
         const payload: any = {
             kanbanId: kanbanId,
             listId: cardListId,
@@ -262,9 +265,9 @@ describe('Kanban Test', () => {
         });
     });
 
-    after(done => {
-        r.table('kanban').get(kanbanId).delete().run().then((result: any) => {
-            done();
-        });
-    });
+    // after(done => {
+    //     r.table('kanban').get(kanbanId).delete().run().then((result: any) => {
+    //         done();
+    //     });
+    // });
 });

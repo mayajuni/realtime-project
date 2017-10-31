@@ -6,8 +6,7 @@
     "start": "gulp server-dev",
     "build-prod": "gulp build-prod",
     "build-dev": "gulp build-dev",
-    "test": "gulp build-test && node test/runner.js",
-    "onlyTest": "node test/runner.js"
+    "test": "gulp build-test && node test/runner.js"
   },
   "dependencies": {
     "ajv": "^5.2.2",

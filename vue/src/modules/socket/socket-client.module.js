@@ -2,7 +2,8 @@ import eventEmiter from '../event-emiter/event-emiter.module'
 
 class SocketClient {
   constructor () {
-    this.url = `ws://localhost:3000`
+    const hostName = location.hostname
+    this.url = `ws://${hostName}:3000`
     this.reconnectDelay = [300, 1000, 5, 1.3]
     this.retries = this.reconnectDelay[2] || Infinity
     this.subscribes = new Set()

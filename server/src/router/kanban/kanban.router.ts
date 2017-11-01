@@ -168,7 +168,7 @@ export class Kanban {
         });
     }
 
-    async updateKanbanLists(payload: any, r: any, fn: Function) {
+    private async updateKanbanLists(payload: any, r: any, fn: Function) {
         const kanbanId = payload.kanbanId;
         const kanban = await r.table('kanban').get(kanbanId).run();
         delete payload.kanbanId;
@@ -178,7 +178,7 @@ export class Kanban {
         await r.table('kanban').get(kanbanId).update({lists: lists}).run();
     }
 
-    async updateKanbanCards(payload: any, r: any, fn: Function) {
+    private async updateKanbanCards(payload: any, r: any, fn: Function) {
         const kanbanId = payload.kanbanId;
         const kanban = await r.table('kanban').get(kanbanId).run();
         delete payload.kanbanId;

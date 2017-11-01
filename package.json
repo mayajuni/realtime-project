@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node start-dev.js"
+    "dev": "node start-dev.js",
+    "prod:server": "cd server && npm run build-prod",
+    "prod:vue": "cd vue && npm run build",
+    "prod": "npm run prod:server && npm run prod:vue"
   },
   "author": "",
   "license": "ISC",

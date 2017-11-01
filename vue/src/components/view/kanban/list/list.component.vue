@@ -114,6 +114,9 @@
 
       .text {
         padding: 6px 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .input {

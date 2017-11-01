@@ -56,6 +56,9 @@
 
     .text {
       padding: 1px 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .input {

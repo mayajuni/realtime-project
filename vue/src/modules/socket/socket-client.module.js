@@ -3,7 +3,7 @@ import eventEmiter from '../event-emiter/event-emiter.module'
 class SocketClient {
   constructor () {
     const host = location.hostname === 'localhost' ? `${location.hostname}:3000` : 'socket.toclick.net'
-    this.url = `ws://${host}`
+    this.url = `${location.protocol === 'http:' ? 'ws' : 'wss'}://${host}`
     this.reconnectDelay = [300, 1000, 5, 1.3]
     this.retries = this.reconnectDelay[2] || Infinity
     this.subscribes = new Set()

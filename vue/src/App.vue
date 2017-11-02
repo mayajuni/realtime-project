@@ -19,4 +19,10 @@
 </script>
 
 <style>
+  #app {
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+  }
 </style>

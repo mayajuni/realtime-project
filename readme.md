@@ -1,34 +1,19 @@
 # Reatime-Project
 
-<a href="https://nodejs.org/en/" target="_blank">
-  <img src="https://img.shields.io/badge/node-8.1.2-brightgreen.svg">
-</a>
-<a href="https://vuejs.org/" target="_blank">
+  <img src="https://img.shields.io/badge/node-8.x-brightgreen.svg">
   <img src="https://img.shields.io/badge/vue-2.x-brightgreen.svg">
-</a>
-<a href="https://www.rethinkdb.com/" target="_blank">
-  <img src="https://img.shields.io/badge/rethinkDB-2.x-brightgreen.svg">
-</a>
-<a href="https://github.com/uNetworking/uWebSockets" target="_blank">
+  <img src="https://img.shields.io/badge/rethinkDB-2.x-brightgreenk">
   <img src="https://img.shields.io/badge/uws-8.x-brightgreen.svg">
-</a>
-<a href="https://www.typescriptlang.org/" target="_blank">
-  <img src="https://img.shields.io/badge/typescript-2.x-brightgreen.svg">
-</a>
-<a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">
+  <img src="https://img.shields.io/badge/typescript-2.x-brightgreen.
   <img src="https://img.shields.io/badge/license-MIT-blue.svg">
-</a>
-<a href="https://github.com/mayajuni/realtime-project" target="_blank">
-  <img src="https://img.shields.io/badge/github-repositories-blue.svg">
-</a>
 
 실시간 처리에 대해서 공부를 하다가 간단하게 프로젝트를 해보자라는 생각으로 시작했다. 간단한 kanban board를 만들어 보았다. 
 
-#### [데모(클릭)](https://realtime.toclick.net)
+#### [데모(클릭)](https://realtime.toclick.net){:target="_blank"}
 
-[Server 설명]()
+[Server 설명](){:target="_blank"}
 
-[Client 설명]()
+[Client 설명](){:target="_blank"}
 
 ### 실행
 

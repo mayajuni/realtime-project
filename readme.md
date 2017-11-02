@@ -4,7 +4,7 @@
   <img src="https://img.shields.io/badge/vue-2.x-brightgreen.svg">
   <img src="https://img.shields.io/badge/rethinkDB-2.x-brightgreenk">
   <img src="https://img.shields.io/badge/uws-8.x-brightgreen.svg">
-  <img src="https://img.shields.io/badge/typescript-2.x-brightgreen.
+  <img src="https://img.shields.io/badge/typescript-2.x-brightgreen.svg>
   <img src="https://img.shields.io/badge/license-MIT-blue.svg">
 
 실시간 처리에 대해서 공부를 하다가 간단하게 프로젝트를 해보자라는 생각으로 시작했다. 간단한 kanban board를 만들어 보았다. 

@@ -11,7 +11,7 @@
 
 #### [데모(클릭)](https://realtime.toclick.net)
 
-[Server 설명]()
+[Server 설명](https://github.com/mayajuni/realtime-project/tree/master/server)
 
 [Client 설명]()
 

@@ -13,7 +13,7 @@
 
 [Server 설명](https://github.com/mayajuni/realtime-project/tree/master/server)
 
-Client 설명()
+Client 설명(준비중)
 
 ### 실행
 

@@ -128,11 +128,11 @@
 
 <style scoped lang='scss'>
   .kanban {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 134px;
-    bottom: 0;
+    flex-grow: 1;
+    flex: 1;
+    position: relative;
+    overflow-y: auto;
+    outline: 0;
 
     .kanban-wrapper {
       height: 100%;
@@ -169,12 +169,7 @@
           white-space: nowrap;
           overflow-x: auto;
           overflow-y: hidden;
-          position: absolute;
-          top: 0;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          padding: 0 8px;
+          position: relative;
 
           .list {
             width: 270px;

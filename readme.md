@@ -9,7 +9,6 @@
 
 실시간 처리에 대해서 공부를 하다가 간단하게 프로젝트를 해보자라는 생각으로 시작했다. 간단한 kanban board를 만들어 보았다. 이 프로젝트는 재미로 시작한 것이고 진행 사항은 [여기](https://github.com/mayajuni/realtime-project/projects)를 보면 된다 
 
-#### [데모(클릭)](https://realtime.toclick.net)
 [Server 설명](https://github.com/mayajuni/realtime-project/tree/master/server)
 
 Client 설명(준비중)
